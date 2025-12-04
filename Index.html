@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WasteTrack – ULM Dining</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Chart.js CDN for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo-area">
+      <span class="logo-dot"></span>
+      <span class="logo-text">WasteTrack</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-btn active" data-view="home-view">Home</button>
+      <button class="nav-btn" data-view="student-view">Student Portal</button>
+      <button class="nav-btn" data-view="staff-view">Staff Dashboard</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME VIEW -->
+    <section id="home-view" class="view active">
+      <section class="hero">
+        <div class="hero-text">
+          <h1>Smarter Dining, Less Waste.</h1>
+          <p>
+            WasteTrack helps ULM Schulze Dining reduce food waste, listen to student
+            preferences, and make data-driven menu decisions.
+          </p>
+          <div class="hero-actions">
+            <button class="primary" data-view="student-view">I'm a Student</button>
+            <button class="secondary" data-view="staff-view">I'm Dining Staff</button>
+          </div>
+          <p class="hero-meta">
+            Approximate demo data only - built as a CSCI 3030 project.
+          </p>
+        </div>
+        <div class="hero-card">
+          <h2>Today’s Snapshot (Demo)</h2>
+          <p><span id="demo-prepared">180</span> meals prepared</p>
+          <p><span id="demo-served">142</span> served</p>
+          <p><span id="demo-wasted">38</span> wasted</p>
+          <p class="hero-highlight">Goal: cut waste by 20-40%.</p>
+        </div>
+      </section>
+
+      <section class="info-grid">
+        <article class="info-card">
+          <h3>Students</h3>
+          <p>See what's actually available in the caf, vote on upcoming meals, and tell dining what you really want on your plate.</p>
+        </article>
+        <article class="info-card">
+          <h3>Dining Staff</h3>
+          <p>Track prepared, served, and wasted portions by dish, station, and day. Turn guesses into clear decisions.</p>
+        </article>
+        <article class="info-card">
+          <h3>ULM Dining Leadership</h3>
+          <p>View high-level trends, top loved meals, most wasted items, and potential savings at a glance.</p>
+        </article>
+      </section>
+    </section>
+
+    <!-- STUDENT VIEW -->
+    <section id="student-view" class="view">
+      <h2>Student Portal</h2>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Today in Schulze</h3>
+          <p>What’s actually available right now (demo data).</p>
+        </header>
+        <div id="today-dishes" class="card-grid"></div>
+        <p id="last-updated" class="meta-text"></p>
+      </section>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Vote on Upcoming Meals</h3>
+          <p>Select a day and vote for the meals you’d like to see.</p>
+        </header>
+        <div class="vote-controls">
+          <label for="vote-day-select">Choose day:</label>
+          <select id="vote-day-select"></select>
+        </div>
+        <div id="vote-dishes" class="card-grid"></div>
+      </section>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Reality Check</h3>
+          <p>Help dining track menu accuracy – was this food truly available today?</p>
+        </header>
+        <form id="accuracy-form" class="accuracy-form"></form>
+        <p id="accuracy-result" class="meta-text"></p>
+      </section>
+    </section>
+
+    <!-- STAFF VIEW -->
+    <section id="staff-view" class="view">
+      <h2>Staff Dashboard</h2>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Today’s Snapshot</h3>
+          <p>Totals based on waste logs entered below.</p>
+        </header>
+        <div class="stats-row">
+          <div class="stat-card">
+            <span class="stat-label">Prepared</span>
+            <span id="stat-prepared" class="stat-value">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Served</span>
+            <span id="stat-served" class="stat-value">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Wasted</span>
+            <span id="stat-wasted" class="stat-value">0</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Log Waste by Dish</h3>
+          <p>Enter demo data for prepared, served, and wasted portions.</p>
+        </header>
+        <form id="waste-form" class="waste-form">
+          <label>
+            Dish
+            <select id="waste-dish-select"></select>
+          </label>
+          <label>
+            Meal
+            <select id="waste-meal-select">
+              <option>Breakfast</option>
+              <option>Lunch</option>
+              <option>Dinner</option>
+            </select>
+          </label>
+          <label>
+            Prepared
+            <input type="number" id="waste-prepared" min="0" required />
+          </label>
+          <label>
+            Served
+            <input type="number" id="waste-served" min="0" required />
+          </label>
+          <label>
+            Wasted
+            <input type="number" id="waste-wasted" min="0" required />
+          </label>
+          <button type="submit" class="primary">Add Log Entry</button>
+          <p id="waste-form-message" class="meta-text"></p>
+        </form>
+      </section>
+
+      <section class="panel">
+        <header class="panel-header">
+          <h3>Analytics</h3>
+          <p>Most wasted & most loved dishes (demo calculations).</p>
+        </header>
+        <div class="chart-row">
+          <div class="chart-card">
+            <h4>Waste by Dish</h4>
+            <canvas id="wasteByDishChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>Student Votes by Dish</h4>
+            <canvas id="votesByDishChart"></canvas>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-column">
+      <h4>Contact ULM Residential Dining</h4>
+      <p>Questions? We’re here to help.</p>
+      <p><strong>Tyeshah Williams</strong><br />
+        <a href="mailto:Williams-Tyeshah@aramark.com">Williams-Tyeshah@aramark.com</a>
+      </p>
+    </div>
+    <div class="footer-column">
+      <h4>Find Schulze Dining Hall</h4>
+      <p>
+        100 Northeast Drive<br />
+        Schulze Dining Hall<br />
+        Monroe, LA 71209
+      </p>
+    </div>
+    <div class="footer-column">
+      <h4>Project Info</h4>
+      <p>WasteTrack • CSCI 3030 Final</p>
+      <p>Prototype only – not an official ULM system.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
